@@ -125,9 +125,11 @@ public class AddNote extends AppCompatActivity {
         builder.setNegativeButton("Cancel", (dialog, which) -> container.setBackgroundColor(-1));
         group.setOnCheckedChangeListener((group1, checkedId) -> {
             Chip chip = group1.findViewById(checkedId);
-            container.setBackgroundColor(Objects.requireNonNull(chip.getChipBackgroundColor()).getDefaultColor());
-            getWindow().setStatusBarColor(chip.getChipBackgroundColor().getDefaultColor());
-            color = String.valueOf(chip.getChipBackgroundColor().getDefaultColor());
+            if (chip != null) {
+                container.setBackgroundColor(Objects.requireNonNull(chip.getChipBackgroundColor()).getDefaultColor());
+                getWindow().setStatusBarColor(chip.getChipBackgroundColor().getDefaultColor());
+                color = String.valueOf(chip.getChipBackgroundColor().getDefaultColor());
+            }
         });
         AlertDialog dialog = builder.create();
         dialog.show();

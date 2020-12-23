@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".activity.AboutActivity">
+
+    <TextView
+        android:layout_margin="5dp"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mobile Communication System Project made by" />
+
+    <TextView
+
+        android:layout_margin="5dp"
+        android:textSize="25sp"
+
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prince Sah\nJanhavi Patil\nDivij Pawar" />
+
+    <TextView
+        android:layout_margin="5dp"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="At Xavier Institute of Engineering, Mumbai" />
+
+</LinearLayout>

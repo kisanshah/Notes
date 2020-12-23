@@ -11,6 +11,38 @@ public class Note {
     public Note() {
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getTitleLowerCase() {
+        return titleLowerCase;
+    }
+
+    public void setTitleLowerCase(String titleLowerCase) {
+        this.titleLowerCase = titleLowerCase;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     public String getDate() {
         return date;
     }

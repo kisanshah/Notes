@@ -5,10 +5,13 @@
     <item
         android:id="@+id/search"
         android:icon="@drawable/search"
-        android:title="Search"
+        android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/signOut"
-        android:title="Sign Out" />
+        android:title="@string/sign_out" />
+    <item
+        android:id="@+id/about"
+        android:title="@string/about" />
 </menu>
