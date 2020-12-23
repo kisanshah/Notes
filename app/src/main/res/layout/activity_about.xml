@@ -14,24 +14,6 @@
         android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mobile Communication System Project made by" />
-
-    <TextView
-
-        android:layout_margin="5dp"
-        android:textSize="25sp"
-
-        android:textColor="@color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Prince Sah\nJanhavi Patil\nDivij Pawar" />
-
-    <TextView
-        android:layout_margin="5dp"
-        android:textSize="25sp"
-        android:textColor="@color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="At Xavier Institute of Engineering, Mumbai" />
+        android:text="" />
 
 </LinearLayout>

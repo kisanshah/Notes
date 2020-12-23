@@ -34,6 +34,7 @@ import java.util.TimeZone;
 public class AddNote extends AppCompatActivity {
 
     TextInputEditText title, note;
+
     FloatingActionButton submit;
     FirebaseAuth auth;
     DatabaseReference ref;

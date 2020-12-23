@@ -22,6 +22,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -124,9 +125,14 @@ public class EditNote extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-                ref.child(key).removeValue();
-                Toast.makeText(EditNote.this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
-                finish();
+                Snackbar.make(editTitle, "Delete note?", Snackbar.LENGTH_LONG).setAction("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ref.child(key).removeValue();
+                        Toast.makeText(EditNote.this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).show();
                 return true;
             case R.id.color:
                 showDialog();
