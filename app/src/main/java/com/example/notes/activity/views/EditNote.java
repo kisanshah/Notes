@@ -1,9 +1,10 @@
-package com.example.notes.activity;
+package com.example.notes.activity.views;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +17,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.notes.R;
+import com.example.notes.activity.model.Note;
+import com.example.notes.activity.viewmodel.NoteViewModel;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -25,23 +31,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class EditNote extends AppCompatActivity {
     MaterialToolbar toolbar;
     TextInputEditText editTitle, editNote;
     FloatingActionButton editSubmit;
-    FirebaseAuth auth;
-    DatabaseReference ref;
+    NoteViewModel viewModel;
     RelativeLayout container;
-    MaterialTextView dateTime, charNumber;
+    MaterialTextView date, time, charNumber;
 
     int color;
     String key;
@@ -50,20 +50,26 @@ public class EditNote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
+
+
+        viewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getApplication())
+                .create(NoteViewModel.class);
         editTitle = findViewById(R.id.editTitle);
         editNote = findViewById(R.id.editNote);
         editSubmit = findViewById(R.id.editSubmit);
         toolbar = findViewById(R.id.toolbar);
         container = findViewById(R.id.container);
-        dateTime = findViewById(R.id.dateTime);
+        date = findViewById(R.id.date);
+        time = findViewById(R.id.time);
         charNumber = findViewById(R.id.charNumber);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        auth = FirebaseAuth.getInstance();
         Bundle i = getIntent().getExtras();
         key = (String) i.get("key");
         editNote.addTextChangedListener(new TextWatcher() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 charNumber.setText(count + " characters");
@@ -79,32 +85,20 @@ public class EditNote extends AppCompatActivity {
                 charNumber.setText(s.length() + " characters");
             }
         });
-        ref = FirebaseDatabase.getInstance().getReference().child("Users").child(Objects.requireNonNull(auth.getUid()));
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
+        editSubmit.setOnClickListener(v -> saveNote());
+        viewModel.getNote(key).observe(this, new Observer<Note>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String note = Objects.requireNonNull(snapshot.child(key).child("note").getValue()).toString();
-                String title = Objects.requireNonNull(snapshot.child(key).child("title").getValue()).toString();
-                color = Integer.parseInt(Objects.requireNonNull(snapshot.child(key).child("color").getValue()).toString());
-                String date = Objects.requireNonNull(snapshot.child(key).child("date").getValue()).toString();
-                String time = Objects.requireNonNull(snapshot.child(key).child("time").getValue()).toString();
-                dateTime.setText(date + " " + time);
-                editNote.setText(note);
-                editTitle.setText(title);
+            public void onChanged(Note note) {
+                editTitle.setText(note.getTitle());
+                editNote.setText(note.getNote());
+                date.setText(note.getDate());
+                time.setText(note.getTime());
+                color = Integer.parseInt(note.getColor());
                 container.setBackgroundColor(color);
-                getWindow().setStatusBarColor(color);
                 getWindow().setNavigationBarColor(color);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+                getWindow().setStatusBarColor(color);
             }
         });
-
-        editSubmit.setOnClickListener(v -> saveNote());
     }
 
     @Override
@@ -116,8 +110,8 @@ public class EditNote extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         saveNote();
+        super.onBackPressed();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -128,7 +122,7 @@ public class EditNote extends AppCompatActivity {
                 Snackbar.make(editTitle, "Delete note?", Snackbar.LENGTH_LONG).setAction("Ok", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ref.child(key).removeValue();
+                        viewModel.deleteNote(key);
                         Toast.makeText(EditNote.this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -143,12 +137,22 @@ public class EditNote extends AppCompatActivity {
     }
 
     void saveNote() {
-        ref.child(key).child("title").setValue(Objects.requireNonNull(editTitle.getText()).toString());
-        ref.child(key).child("note").setValue(Objects.requireNonNull(editNote.getText()).toString());
-        ref.child(key).child("titleLowerCase").setValue(editTitle.getText().toString().toLowerCase());
-        ref.child(key).child("color").setValue(String.valueOf(color));
+        String titleStr = editTitle.getText().toString();
+        String noteStr = editNote.getText().toString();
+        String colorStr = String.valueOf(color);
+        Note note = new Note(titleStr, noteStr, colorStr, titleStr.toLowerCase(), date.getText().toString(), time.getText().toString());
+        Log.d("DEBUG", "saveNote: " + color);
+        viewModel.updateNote(key, toMap(note));
         Toast.makeText(EditNote.this, "Edited Successfully", Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+
+    public Map toMap(Note note) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map map = mapper.convertValue(note, Map.class);
+        Log.d("DEBUG", "toMap: " + map);
+        return map;
     }
 
     void showDialog() {
@@ -158,6 +162,7 @@ public class EditNote extends AppCompatActivity {
         ChipGroup group = view.findViewById(R.id.chip_group);
         builder.setView(view);
         builder.setTitle("Choose color");
+
         builder.setPositiveButton("Ok", (dialog, which) -> {
             Chip chip = group.findViewById(group.getCheckedChipId());
             color = Objects.requireNonNull(chip.getChipBackgroundColor()).getDefaultColor();

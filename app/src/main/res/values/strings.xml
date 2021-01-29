@@ -9,4 +9,6 @@
     <string name="sign_out">Sign Out</string>
     <string name="search">Search</string>
     <string name="about">About</string>
+    <string name="list_mode">list mode</string>
+    <string name="transition">transition</string>
 </resources>

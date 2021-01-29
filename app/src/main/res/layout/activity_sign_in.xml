@@ -22,7 +22,7 @@
         android:layout_marginBottom="0dp"
         android:orientation="vertical"
         android:padding="20dp"
-        tools:context=".activity.SignInActivity">
+        tools:context=".activity.views.SignInActivity">
 
 
         <com.google.android.material.textfield.TextInputLayout

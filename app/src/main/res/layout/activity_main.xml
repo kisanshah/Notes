@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    tools:context=".activity.views.MainActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -28,6 +28,7 @@
             app:hideOnScroll="true">
 
             <TextView
+                android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -39,14 +40,13 @@
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-
             android:id="@+id/add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/todo"
             app:backgroundTint="@color/primary"
             app:layout_anchor="@id/bottomAppBar"
             app:srcCompat="@drawable/add"
-            app:tint="@color/white"
-            android:contentDescription="TODO" />
+            app:tint="@color/white" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>

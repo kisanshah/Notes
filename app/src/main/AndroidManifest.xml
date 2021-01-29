@@ -10,24 +10,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Notes">
-        <activity android:name=".activity.AboutActivity"></activity>
         <activity
-            android:name=".activity.ForgetActivity"
-            android:parentActivityName=".activity.SignInActivity"></activity>
+            android:name=".activity.views.ForgetActivity"
+            android:parentActivityName=".activity.views.SignInActivity" />
         <activity
-            android:name=".activity.EditNote"
-            android:parentActivityName=".activity.MainActivity"
+            android:name=".activity.views.EditNote"
+            android:parentActivityName=".activity.views.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activity.AddNote"
-            android:parentActivityName=".activity.MainActivity"
+            android:name=".activity.views.AddNote"
+            android:parentActivityName=".activity.views.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activity.SignUpActivity"
-            android:parentActivityName=".activity.SignInActivity"
+            android:name=".activity.views.SignUpActivity"
+            android:parentActivityName=".activity.views.SignInActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activity.SignInActivity"
+            android:name=".activity.views.SignInActivity"
+            android:parentActivityName=".activity.views.SignInActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.views.MainActivity" />
     </application>
 
 </manifest>

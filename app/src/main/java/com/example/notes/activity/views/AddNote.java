@@ -1,4 +1,4 @@
-package com.example.notes.activity;
+package com.example.notes.activity.views;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,16 +13,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.notes.R;
+import com.example.notes.activity.model.Note;
+import com.example.notes.activity.viewmodel.NoteViewModel;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,13 +34,12 @@ import java.util.TimeZone;
 public class AddNote extends AppCompatActivity {
 
     TextInputEditText title, note;
-
     FloatingActionButton submit;
-    FirebaseAuth auth;
-    DatabaseReference ref;
-    String color;
+
+    String color = "-1";
     RelativeLayout container;
     BottomAppBar bottomAppBar;
+    NoteViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,41 +49,36 @@ public class AddNote extends AppCompatActivity {
         title = findViewById(R.id.title);
         note = findViewById(R.id.note);
         submit = findViewById(R.id.submit);
-        auth = FirebaseAuth.getInstance();
 
         bottomAppBar = findViewById(R.id.bottomAppBar);
+
+        viewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getApplication())
+                .create(NoteViewModel.class);
 
         setSupportActionBar(bottomAppBar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
         note.requestFocus();
-        ref = FirebaseDatabase.getInstance().getReference().child("Users").child(Objects.requireNonNull(auth.getUid()));
 
         submit.setOnClickListener(v -> {
             Calendar localCalendar = Calendar.getInstance(TimeZone.getDefault());
             Date currentTime = localCalendar.getTime();
+            DateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
+
+            String titleStr = title.getText().toString();
+            String noteStr = note.getText().toString();
             String date = currentTime.toString().substring(4, 10);
             String year = currentTime.toString().substring(30);
-            DateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
             String time = dateFormat.format(new Date());
-            System.out.println(date + " " + time + "," + year);
 
-
-            DatabaseReference childRef = ref.push();
-            String key = childRef.getKey();
-            assert key != null;
-            ref.child(key).child("title").setValue(Objects.requireNonNull(title.getText()).toString());
-            ref.child(key).child("note").setValue(Objects.requireNonNull(note.getText()).toString());
-            ref.child(key).child("titleLowerCase").setValue(title.getText().toString().toLowerCase());
-            ref.child(key).child("date").setValue(date + " " + year);
-            ref.child(key).child("time").setValue(time);
-
-            if (color != null) {
-                ref.child(key).child("color").setValue(color);
-            } else {
-                ref.child(key).child("color").setValue("-1");
+            if (titleStr.isEmpty()) {
+                titleStr = "Untitled";
             }
+            Note note = new Note(titleStr, noteStr, color, titleStr.toLowerCase(), date + " " + year, time);
+            viewModel.addNote(note);
+
             Toast.makeText(AddNote.this, "Note Added", Toast.LENGTH_SHORT).show();
             finish();
         });

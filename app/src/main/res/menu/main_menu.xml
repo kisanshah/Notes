@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/listMode"
+        android:icon="@drawable/list_svg"
+        android:title="staggered"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/search"
         android:icon="@drawable/search"
         android:title="@string/search"
@@ -11,7 +16,5 @@
     <item
         android:id="@+id/signOut"
         android:title="@string/sign_out" />
-    <item
-        android:id="@+id/about"
-        android:title="@string/about" />
+
 </menu>

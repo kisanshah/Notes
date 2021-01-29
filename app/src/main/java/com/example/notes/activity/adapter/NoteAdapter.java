@@ -1,5 +1,6 @@
-package com.example.notes.activity;
+package com.example.notes.activity.adapter;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,14 +9,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notes.R;
+import com.example.notes.activity.model.Note;
+import com.example.notes.activity.views.EditNote;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 public class NoteAdapter extends FirebaseRecyclerAdapter<Note, NoteAdapter.NoteViewHolder> {
-
 
     @Override
     public void updateOptions(@NonNull FirebaseRecyclerOptions<Note> options) {
@@ -26,7 +29,6 @@ public class NoteAdapter extends FirebaseRecyclerAdapter<Note, NoteAdapter.NoteV
 
     public NoteAdapter(@NonNull FirebaseRecyclerOptions<Note> options) {
         super(options);
-
     }
 
 
@@ -65,9 +67,11 @@ public class NoteAdapter extends FirebaseRecyclerAdapter<Note, NoteAdapter.NoteV
             container = itemView.findViewById(R.id.container);
             date = itemView.findViewById(R.id.date);
             container.setOnClickListener(v -> {
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation((Activity) v.getContext(),container,"transition");
                 Intent i = new Intent(itemView.getContext(), EditNote.class);
                 i.putExtra("key", getRef(getItemCount() - 1 - getAdapterPosition()).getKey());
-                itemView.getContext().startActivity(i);
+                itemView.getContext().startActivity(i,activityOptionsCompat.toBundle());
             });
         }
     }
